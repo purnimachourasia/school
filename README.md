@@ -1,3 +1,34 @@
+School Management Mini-Project
+## Overview
+
+This is a mini-project built using Next.js and React, with a MySQL (Avein) database. The project consists of two pages:
+
+Add School (addSchool.jsx) – A responsive form to input and store school data, including name, address, city, state, contact, email, and an image. Input validations (like email format) are implemented. Images are stored in the schoolImages folder.
+
+Show Schools (showSchools.jsx) – Displays the list of schools in a grid layout similar to an e-commerce website. Only the school’s name, address, city, and image are visible. The page is fully responsive.
+
+## Features
+
+Add schools with validations using react-hook-form.
+
+Upload and store school images.
+
+Fetch and display schools from the Avein MySQL database.
+
+Responsive design for both desktop and mobile.
+
+Clean and user-friendly UI.
+
+## Tech Stack
+
+Frontend: Next.js, React, Tailwind CSS
+
+Backend: Next.js API routes
+
+Database: MySQL (Avein)
+
+Hosting: [Your Hosting Platform, e.g., Vercel]
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -20,17 +51,3 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
