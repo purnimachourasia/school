@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { pool } from "@/lib/db";
-import fs from "fs";
-import path from "path";
 
 export async function POST(req: Request) {
   try {
@@ -14,26 +12,21 @@ export async function POST(req: Request) {
     const contact = formData.get("contact") as string;
     const email_id = formData.get("email_id") as string;
 
-    let imagePath = "";
     const file = formData.get("image") as File;
+    let imageBase64 = null;
     if (file) {
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const filename = `${Date.now()}-${file.name}`;
-      const uploadDir = path.join(process.cwd(), "public/schoolImages");
-      if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-      const filePath = path.join(uploadDir, filename);
-      fs.writeFileSync(filePath, buffer);
-      imagePath = `/schoolImages/${filename}`;
+      const buffer = Buffer.from(await file.arrayBuffer());
+      imageBase64 = buffer.toString("base64");
     }
 
-    await pool.query(
-      "INSERT INTO schools (name, address, city, state, contact, image, email_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [name, address, city, state, contact, imagePath, email_id]
+    const [result] = await pool.query(
+      "INSERT INTO schools (name, address, city, state, contact, email_id, image) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [name, address, city, state, contact, email_id, imageBase64]
     );
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, id: (result as any).insertId });
   } catch (error: any) {
+    console.error("Insert Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
