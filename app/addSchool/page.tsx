@@ -8,25 +8,30 @@ export default function AddSchool() {
     handleSubmit,
     formState: { errors },
   } = useForm();
+
   const [file, setFile] = useState<File | null>(null);
 
   const onSubmit = async (data: any) => {
-    const formData = new FormData();
-    Object.keys(data).forEach((key) => formData.append(key, data[key]));
+    try {
+      // Create FormData inside onSubmit
+      const formData = new FormData();
+      Object.keys(data).forEach((key) => formData.append(key, data[key]));
+      if (file) formData.append("image", file);
 
-    if (file) {
-      formData.append("image", file);
-    }
+      const res = await fetch("/api/schools/add", {
+        method: "POST",
+        body: formData, // ✅ do NOT set headers manually
+      });
 
-    const res = await fetch("/api/schools/add", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (res.ok) {
-      alert("School added successfully!");
-    } else {
-      alert("Failed to add school.");
+      if (res.ok) {
+        alert("School added successfully!");
+      } else {
+        const err = await res.json();
+        alert("Failed to add school: " + err.error);
+      }
+    } catch (err: any) {
+      console.error("Submit Error:", err);
+      alert("Failed to add school: " + err.message);
     }
   };
 
