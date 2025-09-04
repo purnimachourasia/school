@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import {
   FaFacebookF,
   FaLinkedinIn,
@@ -8,15 +9,25 @@ import {
 } from "react-icons/fa";
 import { FiMenu, FiX } from "react-icons/fi";
 
+interface School {
+  id: number;
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  email_id: string;
+  image: string | null;
+}
+
 export default function ShowSchools() {
-  const [schools, setSchools] = useState([]);
+  const [schools, setSchools] = useState<School[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchSchools = async () => {
       try {
         const res = await fetch("/api/schools/get");
-        const data = await res.json();
+        const data: School[] = await res.json();
         setSchools(data);
       } catch (err) {
         console.error("Error fetching schools:", err);
@@ -30,7 +41,6 @@ export default function ShowSchools() {
       {/* Top Bar */}
       <header className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white relative">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-3">
-          {/* Left Email */}
           <div className="text-sm flex items-center gap-2">
             <span className="text-white">✉</span>
             <a
@@ -42,42 +52,29 @@ export default function ShowSchools() {
           </div>
 
           {/* Desktop Nav */}
-          <nav className="hidden md:flex gap-4 text-sm font-bold items-center">
-            <a href="#" className="hover:underline">
-              Common Admissions
-            </a>
-            <a href="#" className="hover:underline">
-              School Portal
-            </a>
-            <a href="#" className="hover:underline">
-              Find Schools
-            </a>
-            <a href="#" className="hover:underline">
-              Blog
-            </a>
-            <a href="#" className="hover:underline">
-              Log In
-            </a>
+          <nav className="hidden md:flex gap-4 text-sm font-bold mt-5 items-center">
+            {[
+              "Common Admissions",
+              "School Portal",
+              "Find Schools",
+              "Blog",
+              "Log In",
+            ].map((item) => (
+              <a key={item} href="#" className="hover:underline">
+                {item}
+              </a>
+            ))}
             <a
               href="#"
               className="bg-cyan-900 px-3 py-1 rounded hover:bg-cyan-950 transition"
             >
               Sign Up
             </a>
-            {/* Social Icons */}
             <div className="flex gap-3 ml-4">
-              <a href="#" className="hover:text-cyan-300">
-                <FaFacebookF />
-              </a>
-              <a href="#" className="hover:text-cyan-300">
-                <FaLinkedinIn />
-              </a>
-              <a href="#" className="hover:text-cyan-300">
-                <FaInstagram />
-              </a>
-              <a href="#" className="hover:text-cyan-300">
-                <FaYoutube />
-              </a>
+              <FaFacebookF className="hover:text-cyan-300 cursor-pointer" />
+              <FaLinkedinIn className="hover:text-cyan-300 cursor-pointer" />
+              <FaInstagram className="hover:text-cyan-300 cursor-pointer" />
+              <FaYoutube className="hover:text-cyan-300 cursor-pointer" />
             </div>
           </nav>
 
@@ -93,45 +90,33 @@ export default function ShowSchools() {
         {/* Mobile Dropdown */}
         {menuOpen && (
           <div className="md:hidden bg-gradient-to-r from-teal-700 to-cyan-800 text-white px-4 py-4 flex flex-col gap-3 absolute top-full left-0 w-full shadow-lg z-50">
-            <a href="#" className="hover:underline">
-              Common Admissions
-            </a>
-            <a href="#" className="hover:underline">
-              School Portal
-            </a>
-            <a href="#" className="hover:underline">
-              Find Schools
-            </a>
-            <a href="#" className="hover:underline">
-              Blog
-            </a>
-            <a href="#" className="hover:underline">
-              Log In
-            </a>
+            {[
+              "Common Admissions",
+              "School Portal",
+              "Find Schools",
+              "Blog",
+              "Log In",
+            ].map((item) => (
+              <a key={item} href="#" className="hover:underline">
+                {item}
+              </a>
+            ))}
             <a
               href="#"
               className="bg-cyan-900 px-3 py-2 rounded hover:bg-cyan-950 transition w-fit"
             >
               Sign Up
             </a>
-            {/* Social Icons */}
             <div className="flex gap-4 mt-2">
-              <a href="#" className="hover:text-cyan-300">
-                <FaFacebookF />
-              </a>
-              <a href="#" className="hover:text-cyan-300">
-                <FaLinkedinIn />
-              </a>
-              <a href="#" className="hover:text-cyan-300">
-                <FaInstagram />
-              </a>
-              <a href="#" className="hover:text-cyan-300">
-                <FaYoutube />
-              </a>
+              <FaFacebookF className="hover:text-cyan-300 cursor-pointer" />
+              <FaLinkedinIn className="hover:text-cyan-300 cursor-pointer" />
+              <FaInstagram className="hover:text-cyan-300 cursor-pointer" />
+              <FaYoutube className="hover:text-cyan-300 cursor-pointer" />
             </div>
           </div>
         )}
       </header>
+
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-20 text-center">
         <h1 className="text-4xl md:text-5xl font-bold">
@@ -155,18 +140,27 @@ export default function ShowSchools() {
       {/* Schools Grid */}
       <section className="max-w-7xl mx-auto py-12 px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {Array.isArray(schools) && schools.length > 0 ? (
-            schools.map((school: any) => (
+          {schools.length > 0 ? (
+            schools.map((school: School) => (
               <div
                 key={school.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition flex flex-col"
               >
-                <img
-                  src={school.image || "/placeholder.png"}
-                  alt={school.name}
-                  className="h-44 w-full object-cover"
-                />
-                <div className="p-4">
+                {school.image ? (
+                  <div className="w-full h-48 relative">
+                    <Image
+                      src={school.image}
+                      alt={school.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="h-48 w-full bg-gray-200 flex items-center justify-center text-gray-500">
+                    No Image
+                  </div>
+                )}
+                <div className="p-4 flex-1 flex flex-col">
                   <h2 className="font-semibold text-lg text-gray-800">
                     {school.name}
                   </h2>
@@ -174,19 +168,19 @@ export default function ShowSchools() {
                     {school.city}, {school.state}
                   </p>
                   <p className="text-gray-500 text-xs">{school.address}</p>
-                  <div className="mt-3">
-                    <a
-                      href={`mailto:${school.email_id}`}
-                      className="text-teal-600 text-sm hover:underline"
-                    >
-                      {school.email_id}
-                    </a>
-                  </div>
+                  <a
+                    href={`mailto:${school.email_id}`}
+                    className="text-teal-600 text-sm hover:underline mt-2 block"
+                  >
+                    {school.email_id}
+                  </a>
                 </div>
               </div>
             ))
           ) : (
-            <p className="text-center text-gray-600">No schools found.</p>
+            <p className="text-center text-gray-600 col-span-full">
+              No schools found.
+            </p>
           )}
         </div>
       </section>
@@ -194,7 +188,6 @@ export default function ShowSchools() {
       {/* Footer */}
       <footer className="bg-gradient-to-r from-teal-700 to-cyan-800 text-gray-300 py-10 mt-10">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {/* Newsletter */}
           <div>
             <h3 className="font-bold text-lg text-white">
               Subscribe to our Newsletter
@@ -214,40 +207,38 @@ export default function ShowSchools() {
             </div>
           </div>
 
-          {/* Important Links */}
           <div>
             <h3 className="font-bold text-lg text-white">Important Links</h3>
             <ul className="mt-3 space-y-2 text-sm opacity-90">
-              <li className="hover:text-white cursor-pointer">
-                Schools in India
-              </li>
-              <li className="hover:text-white cursor-pointer">Other Schools</li>
-              <li className="hover:text-white cursor-pointer">
-                Colleges in India
-              </li>
-              <li className="hover:text-white cursor-pointer">
-                Advertise With Us
-              </li>
+              {[
+                "Schools in India",
+                "Other Schools",
+                "Colleges in India",
+                "Advertise With Us",
+              ].map((item) => (
+                <li key={item} className="hover:text-white cursor-pointer">
+                  {item}
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Support */}
           <div>
             <h3 className="font-bold text-lg text-white">Support</h3>
             <ul className="mt-3 space-y-2 text-sm opacity-90">
-              <li className="hover:text-white cursor-pointer">
-                Privacy Policy
-              </li>
-              <li className="hover:text-white cursor-pointer">
-                Terms & Conditions
-              </li>
-              <li className="hover:text-white cursor-pointer">Contact Us</li>
-              <li className="hover:text-white cursor-pointer">About Us</li>
+              {[
+                "Privacy Policy",
+                "Terms & Conditions",
+                "Contact Us",
+                "About Us",
+              ].map((item) => (
+                <li key={item} className="hover:text-white cursor-pointer">
+                  {item}
+                </li>
+              ))}
             </ul>
           </div>
         </div>
-
-        {/* Copyright */}
         <div className="text-center mt-6 text-sm opacity-70 px-4">
           © 2025 School Directory. All rights reserved.
         </div>
